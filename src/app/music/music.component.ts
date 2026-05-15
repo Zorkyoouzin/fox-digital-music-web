@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router'; // Adicionado Router aqui
 import { CommonModule } from '@angular/common';
-import { MusicService } from './music.service'; // Certifique-se do caminho
+import { MusicService } from './music.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -22,7 +22,8 @@ export class MusicComponent implements OnInit, OnDestroy {
   timer: any;
   private refreshSub: Subscription = new Subscription();
 
-  constructor(private musicService: MusicService) {}
+  // Injetamos o Router aqui no construtor
+  constructor(private musicService: MusicService, private router: Router) {}
 
   ngOnInit(): void {
     // Relógio Real-time (MANTIDO)
@@ -34,7 +35,6 @@ export class MusicComponent implements OnInit, OnDestroy {
     this.loadAndCountGenres();
 
     // 2. Se inscreve para ouvir o "rádio" do serviço
-    // Toda vez que cadastrar ou deletar, ele roda a contagem de novo
     this.refreshSub = this.musicService.refreshNeeded$.subscribe(() => {
       this.loadAndCountGenres();
     });
@@ -42,13 +42,11 @@ export class MusicComponent implements OnInit, OnDestroy {
 
   loadAndCountGenres() {
     this.musicService.getMusics().subscribe(musics => {
-      // Reseta os 8 gêneros para não acumular lixo
       const counts: any = { 
         'Pop': 0, 'Rock': 0, 'Sertanejo': 0, 'Religioso': 0, 
         'Samba': 0, 'Funk': 0, 'Internacional': 0, 'MPB': 0 
       };
 
-      // Percorre as músicas vindas do MongoDB e soma
       musics.forEach(m => {
         if (counts[m.genre] !== undefined) {
           counts[m.genre]++;
@@ -63,7 +61,15 @@ export class MusicComponent implements OnInit, OnDestroy {
     if (this.refreshSub) this.refreshSub.unsubscribe();
   }
 
+  // FUNÇÃO DE SAIR CORRIGIDA
   logout() {
     console.log('Saindo do sistema FOX...');
+    
+    // Limpa os dados de sessão (Opcional, mas boa prática)
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // Redireciona para a tela de login
+    this.router.navigate(['/login']);
   }
 }
