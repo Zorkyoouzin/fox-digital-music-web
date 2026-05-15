@@ -1,0 +1,36 @@
+<div class="min-h-screen flex items-center justify-center bg-[#0a0c10] p-4 font-sans">
+  <div class="w-full max-w-[400px] bg-[#1a1b26] rounded-3xl p-8 border border-slate-800/50 shadow-2xl relative">
+    
+    <div class="flex items-center justify-center gap-2 mb-8 border-b border-slate-700/50 pb-6">
+      <span class="text-4xl font-extrabold text-red-600 tracking-tighter">FOX</span>
+      <div class="flex flex-col">
+        <span class="text-green-500 text-[9px] font-bold uppercase tracking-widest leading-none">Digital</span>
+        <span class="text-green-500 text-[9px] font-bold uppercase tracking-widest leading-none">Music</span>
+      </div>
+    </div>
+
+    <div *ngIf="statusMessage" 
+         [ngClass]="{'bg-red-500/10 text-red-400 border-red-500/30': statusType === 'error', 
+                     'bg-green-500/10 text-green-400 border-green-500/30': statusType === 'success'}"
+         class="mb-6 flex items-start gap-3 p-4 rounded-xl border fade-in shadow-inner">
+      <div class="flex flex-col">
+        <p class="text-sm font-semibold">{{ statusMessage }}</p>
+      </div>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <input type="text" name="username" [(ngModel)]="username" placeholder="Nome de utilizador" required
+             class="w-full bg-white text-slate-900 font-bold placeholder-slate-400 px-5 py-3.5 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-500/40">
+      <input type="password" name="password" [(ngModel)]="password" placeholder="••••••••" required
+             class="w-full bg-white text-slate-900 font-bold placeholder-slate-400 px-5 py-3.5 rounded-full focus:outline-none focus:ring-4 focus:ring-blue-500/40">
+      
+      <div class="flex justify-between items-center px-2 mt-2 mb-2">
+        <a href="#" (click)="toggleMode($event)" class="text-[13px] font-semibold text-slate-300 hover:text-white">{{ isLoginMode ? 'Criar Conta' : 'Já tenho conta' }}</a>
+      </div>
+
+      <button type="submit" class="w-full bg-blue-500 hover:bg-blue-400 text-white font-bold py-3.5 rounded-full transition-all">
+        {{ isLoginMode ? 'Entrar' : 'Registar' }}
+      </button>
+    </form>
+  </div>
+</div>

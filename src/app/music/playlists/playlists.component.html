@@ -1,0 +1,94 @@
+<div class="p-8 flex flex-col items-center font-sans w-full mt-4">
+  
+  <div class="w-full max-w-5xl mb-10 flex justify-between items-center border-b border-slate-800/80 pb-6">
+    <div>
+      <h1 class="text-3xl font-extrabold text-purple-400 tracking-wide flex items-center gap-3">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+        {{ selectedPlaylist ? selectedPlaylist.name : 'Minhas Playlists' }}
+      </h1>
+      <p class="text-slate-400 mt-2 text-sm font-medium">
+        {{ selectedPlaylist ? 'Músicas selecionadas para este mix.' : 'Crie e gerencie suas seleções musicais.' }}
+      </p>
+    </div>
+
+    <button *ngIf="selectedPlaylist" (click)="closePlaylist()" class="bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-full transition-all border border-slate-700">
+      ← Voltar
+    </button>
+
+    <button *ngIf="!selectedPlaylist && !showInput" (click)="toggleInput()" class="bg-purple-500 hover:bg-purple-400 text-white font-bold py-3 px-6 rounded-full transition-all shadow-lg">
+      + Nova Playlist
+    </button>
+  </div>
+
+  <div *ngIf="!selectedPlaylist" class="w-full max-w-5xl">
+    
+    <div *ngIf="showInput" class="bg-[#13141f] p-6 rounded-3xl border border-purple-500/30 mb-8 flex gap-4 items-center shadow-lg fade-in">
+      <input type="text" [(ngModel)]="newPlaylistName" (keyup.enter)="createPlaylist()" placeholder="Nome da playlist..." 
+             class="flex-1 bg-[#0a0c10] text-white px-5 py-4 rounded-xl border border-slate-800 focus:border-purple-500 outline-none transition-all">
+      <button (click)="createPlaylist()" class="bg-purple-500 text-white font-bold py-4 px-8 rounded-xl">Salvar</button>
+      <button (click)="toggleInput()" class="text-slate-300 px-6 font-bold">Cancelar</button>
+    </div>
+
+    <div *ngIf="playlists.length > 0; else noPlaylists" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let list of playlists" class="bg-[#1a1b26] p-7 rounded-3xl border border-slate-800/50 shadow-2xl flex flex-col relative group hover:border-purple-500/50 transition-all duration-300">
+        <div class="flex justify-between items-start mb-2">
+          <h2 class="text-2xl font-bold text-white truncate w-40">{{ list.name }}</h2>
+          <span class="bg-purple-500/10 text-purple-400 px-3 py-1 rounded-full text-[10px] font-black uppercase">Mix</span>
+        </div>
+        <p class="text-slate-500 text-xs font-medium mb-8">Criada em: {{ list.createdAt | date:'dd/MM/yyyy' }}</p>
+
+        <div class="flex gap-3 mt-auto border-t border-slate-700/30 pt-5">
+          <button (click)="viewPlaylist(list)" class="flex-1 bg-purple-500 hover:bg-purple-400 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">
+            Abrir
+          </button>
+          <button (click)="deletePlaylist(list.id)" class="flex-1 bg-transparent border border-slate-700 hover:border-red-500 text-slate-400 hover:text-red-400 py-3 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedPlaylist" class="w-full max-w-5xl fade-in">
+    <div *ngIf="selectedPlaylist.songs && selectedPlaylist.songs.length > 0; else emptyPlaylist" class="space-y-3">
+      
+      <div *ngFor="let song of selectedPlaylist.songs" class="flex items-center justify-between bg-[#1a1b26] p-5 rounded-2xl border border-slate-800/50 hover:border-purple-500/30 transition-all group">
+        <div class="flex items-center gap-5">
+          <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center text-purple-400 font-bold">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 3v11H4a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1V6.664l9-1.8V15h-2a1 1 0 00-1 1v2a1 1 0 001 1h2a1 1 0 001-1V3z"></path></svg>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-lg leading-tight">{{ song.song }}</h3>
+            <p class="text-orange-500 font-black text-[10px] uppercase tracking-widest">{{ song.singer }}</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-6">
+          <span class="text-[10px] font-bold text-slate-500 uppercase bg-slate-800/50 px-3 py-1 rounded-md">{{ song.genre }}</span>
+          <button (click)="removeSongFromPlaylist(song._id)" class="text-slate-600 hover:text-red-500 transition-colors p-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <ng-template #emptyPlaylist>
+      <div class="text-center py-20 bg-[#1a1b26] rounded-[2.5rem] border border-dashed border-slate-800">
+        <p class="text-slate-500 font-medium">Esta playlist ainda não tem músicas.</p>
+        <p class="text-slate-600 text-xs mt-2">Vá ao Início e clique em "+ Salvar na Playlist" em qualquer card.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <ng-template #noPlaylists>
+    <div class="bg-[#1a1b26] border border-slate-800/50 rounded-3xl p-10 text-center w-full max-w-xl mt-4 shadow-xl">
+      <h3 class="text-white text-xl font-bold mb-2">Sua biblioteca está vazia</h3>
+      <p class="text-slate-400 text-sm font-medium mb-6">Comece criando sua primeira playlist personalizada.</p>
+      <button (click)="toggleInput()" class="bg-purple-500/10 text-purple-400 font-bold py-3 px-6 rounded-full border border-purple-500/30">
+        Criar Primeira Playlist
+      </button>
+    </div>
+  </ng-template>
+
+</div>

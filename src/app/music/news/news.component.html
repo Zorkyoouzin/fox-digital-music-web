@@ -1,89 +1,60 @@
-<div class="border-b border-gray-900/10 pb-12 mx-10">
-  <h2 class="text-2xl font-semibold leading-7 text-gray-900 text-center">Cadastrar Música</h2>
-  <div class="flex justify-start my-4">
-    <button class="mx-2 bg-black text-white font-medium p-2 rounded-md hover:bg-green-700" (click)="listMusics()">
-      Músicas Cadastradas
+<div class="flex flex-col items-center w-full min-h-screen bg-[#0a0c10] py-12 px-6">
+  
+  <div class="w-full max-w-4xl mb-8">
+    <button routerLink="/list" class="text-slate-400 hover:text-white font-bold flex items-center gap-2 transition-all group">
+      <span class="group-hover:-translate-x-1 transition-transform">←</span> Voltar para a Lista
     </button>
   </div>
-  <p class="mt-1 text-sm leading-6 text-gray-600 text-center">Preencha os detalhes da música abaixo.</p>
 
-  <form [formGroup]="musicForm" (ngSubmit)="onSubmit()" class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 ">
-    <!-- Cantor -->
-    <div class="sm:col-span-3">
-      <label for="singer" class="block text-sm font-medium leading-6 text-gray-900">Cantor</label>
-      <div class="mt-2">
-        <input
-          type="text"
-          id="singer"
-          formControlName="singer"
-          maxlength="51"
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          placeholder="Digite o nome do cantor"
-        />
-        <mat-error *ngIf="musicForm.get('singer')?.invalid && (musicForm.get('singer')?.touched || musicForm.get('singer')?.dirty)" class="text-red-500">
-          {{ getErrorMessage('singer') }}
-        </mat-error>
+  <div class="text-center mb-12 w-full max-w-4xl">
+    <h1 class="text-6xl font-black mb-4 tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 drop-shadow-[0_5px_15px_rgba(168,85,247,0.4)]">
+      Cadastrar Música
+    </h1>
+    <p class="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px]">Preencha os detalhes do novo hit no acervo</p>
+  </div>
+
+  <div class="w-full max-w-4xl bg-[#1a1b26] p-10 rounded-[2.5rem] border border-slate-800/60 shadow-2xl">
+    
+    <form class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <div class="flex flex-col gap-2">
+        <label class="text-slate-200 text-xs font-black uppercase tracking-widest ml-4">Nome do Cantor / Banda</label>
+        <input type="text" placeholder="Ex: MC Xenon" 
+               class="w-full bg-[#0a0c10] text-white px-6 py-4 rounded-full border border-slate-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none transition-all font-bold">
       </div>
-    </div>
 
-    <!-- Música -->
-    <div class="sm:col-span-3">
-      <label for="song" class="block text-sm font-medium leading-6 text-gray-900">Música</label>
-      <div class="mt-2">
-        <input
-          type="text"
-          id="song"
-          formControlName="song"
-          maxlength="51"
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          placeholder="Digite o nome da música"
-        />
-        <mat-error *ngIf="musicForm.get('song')?.invalid && (musicForm.get('song')?.touched || musicForm.get('song')?.dirty)" class="text-red-500">
-          {{ getErrorMessage('song') }}
-        </mat-error>
+      <div class="flex flex-col gap-2">
+        <label class="text-slate-200 text-xs font-black uppercase tracking-widest ml-4">Título da Música</label>
+        <input type="text" placeholder="Ex: Die With A Smile" 
+               class="w-full bg-[#0a0c10] text-white px-6 py-4 rounded-full border border-slate-700 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 outline-none transition-all font-bold">
       </div>
-    </div>
 
-    <!-- Estilo Musical -->
-    <div class="sm:col-span-3">
-      <label for="genre" class="block text-sm font-medium leading-6 text-gray-900">Estilo Musical</label>
-      <div class="mt-2">
-        <input
-          type="text"
-          id="genre"
-          formControlName="genre"
-          maxlength="31"
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-          placeholder="Digite o estilo musical"
-        />
-        <mat-error *ngIf="musicForm.get('genre')?.invalid && (musicForm.get('genre')?.touched || musicForm.get('genre')?.dirty)" class="text-red-500">
-          {{ getErrorMessage('genre') }}
-        </mat-error>
+      <div class="flex flex-col gap-2">
+        <label class="text-slate-200 text-xs font-black uppercase tracking-widest ml-4">Estilo / Gênero</label>
+        <select class="w-full bg-[#0a0c10] text-white px-6 py-4 rounded-full border border-slate-700 focus:border-green-500 outline-none transition-all font-bold appearance-none">
+          <option value="Pop">Pop</option>
+          <option value="Rock">Rock</option>
+          <option value="Sertanejo">Sertanejo</option>
+          <option value="Funk">Funk</option>
+          <option value="Pagode">Pagode</option>
+          <option value="Religioso">Religioso</option>
+          <option value="Internacional">Internacional</option>
+        </select>
       </div>
-    </div>
 
-    <!-- Data de Cadastro -->
-    <div class="sm:col-span-3">
-      <label for="registrationDate" class="block text-sm font-medium leading-6 text-gray-900">Data de Cadastro</label>
-      <div class="mt-2">
-        <input
-          type="date"
-          id="registrationDate"
-          formControlName="registrationDate"
-          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-        />
+      <div class="flex flex-col gap-2">
+        <label class="text-slate-200 text-xs font-black uppercase tracking-widest ml-4">Data de Cadastro</label>
+        <input type="date" 
+               class="w-full bg-[#0a0c10] text-white px-6 py-4 rounded-full border border-slate-700 focus:border-pink-500 outline-none transition-all font-bold color-scheme-dark">
       </div>
-    </div>
 
-    <!-- Botão de Enviar -->
-    <div class="sm:col-span-6 flex justify-center">
-      <button
-        type="submit"
-        [attr.disabled]="!musicForm.valid ? true : null" 
-        class="w-1/2 bg-indigo-600 text-white font-medium p-2 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-600 focus:ring-inset disabled:opacity-50"
-      >
-        Enviar
-      </button>
-    </div>
-  </form>
+      <div class="md:col-span-2 mt-6">
+        <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-black py-5 rounded-full text-sm uppercase tracking-[0.3em] transition-all shadow-xl hover:-translate-y-1 active:scale-95">
+          🚀 Finalizar Cadastro
+        </button>
+      </div>
+
+    </form>
+  </div>
+
 </div>

@@ -1,1 +1,117 @@
-<router-outlet></router-outlet>
+<div class="min-h-screen bg-[#0a0c10] flex font-sans overflow-hidden">
+  
+  <aside class="w-[300px] bg-[#0a0c10] border-r-2 border-[#1a1b26] flex flex-col p-6 h-screen sticky top-0 z-50">
+    
+    <div class="flex items-center justify-center gap-2 mb-10 mt-4">
+      <span class="text-5xl font-extrabold text-red-600 tracking-tighter">FOX</span>
+      <div class="flex flex-col">
+        <span class="text-green-500 text-[10px] font-bold uppercase tracking-widest leading-none">Digital</span>
+        <span class="text-green-500 text-[10px] font-bold uppercase tracking-widest leading-none">Music</span>
+      </div>
+    </div>
+
+    <nav class="flex flex-col gap-4 mb-8">
+      
+      <a routerLink="/list" 
+         routerLinkActive="bg-blue-500/10 text-white !border-l-[6px] border-blue-500 shadow-[inset_15px_0_20px_-15px_rgba(59,130,246,0.6)]" 
+         class="flex items-center gap-4 text-slate-400 px-5 py-4 rounded-r-2xl font-black transition-all border-l-[6px] border-transparent hover:bg-slate-800/50 group">
+        <svg class="w-6 h-6 text-blue-500 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+        </svg>
+        <span class="text-sm uppercase tracking-widest">Início</span>
+      </a>
+      
+      <a routerLink="/playlists" 
+         routerLinkActive="bg-purple-500/10 text-white !border-l-[6px] border-purple-500 shadow-[inset_15px_0_20px_-15px_rgba(168,85,247,0.6)]" 
+         class="flex items-center gap-4 text-slate-400 px-5 py-4 rounded-r-2xl font-black transition-all border-l-[6px] border-transparent hover:bg-slate-800/50 group">
+        <svg class="w-6 h-6 text-purple-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+        </svg>
+        <span class="text-sm uppercase tracking-widest">Minha Playlist</span>
+      </a>
+
+    </nav>
+
+    <div class="bg-[#13141f] rounded-[2rem] p-6 border border-slate-800 flex-1 mb-6 shadow-inner flex flex-col overflow-hidden">
+      <h3 class="text-yellow-400 text-sm font-black mb-6 uppercase tracking-[0.3em] flex items-center gap-2">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+        Gêneros
+      </h3>
+      
+      <div class="flex flex-col flex-1 gap-1">
+        
+        <div class="flex flex-1 justify-between items-center border-b border-slate-800/40 transition-all hover:bg-white/5 px-2">
+          <span class="text-slate-200 text-sm font-black">🎵 Pop</span>
+          <span class="text-blue-400 font-black text-xs">{{ genreCounts['Pop'] || 0 }}</span>
+        </div>
+
+        <div class="flex flex-1 justify-between items-center border-b border-slate-800/40 transition-all hover:bg-white/5 px-2">
+          <span class="text-slate-200 text-sm font-black">🎸 Rock</span>
+          <span class="text-red-400 font-black text-xs">{{ genreCounts['Rock'] || 0 }}</span>
+        </div>
+
+        <div class="flex flex-1 justify-between items-center border-b border-slate-800/40 transition-all hover:bg-white/5 px-2">
+          <span class="text-slate-200 text-sm font-black">🤠 Sertanejo</span>
+          <span class="text-orange-400 font-black text-xs">{{ genreCounts['Sertanejo'] || 0 }}</span>
+        </div>
+        
+        <div class="flex flex-1 justify-between items-center border-b border-slate-800/40 transition-all hover:bg-white/5 px-2">
+          <span class="text-slate-200 text-sm font-black">🙏 Religioso</span>
+          <span class="text-white font-black text-xs">{{ genreCounts['Religioso'] || 0 }}</span>
+        </div>
+
+        <div class="flex flex-1 justify-between items-center border-b border-slate-800/40 transition-all hover:bg-white/5 px-2">
+          <span class="text-slate-200 text-sm font-black">💃 Samba</span>
+          <span class="text-green-500 font-black text-xs">{{ genreCounts['Samba'] || 0 }}</span>
+        </div>
+
+        <div class="flex flex-1 justify-between items-center border-b border-slate-800/40 transition-all hover:bg-white/5 px-2">
+          <span class="text-slate-200 text-sm font-black">🔥 Funk</span>
+          <span class="text-pink-500 font-black text-xs">{{ genreCounts['Funk'] || 0 }}</span>
+        </div>
+
+        <div class="flex flex-1 justify-between items-center border-b border-slate-800/40 transition-all hover:bg-white/5 px-2">
+          <span class="text-slate-200 text-sm font-black">🌍 Internacional</span>
+          <span class="text-purple-400 font-black text-xs">{{ genreCounts['Internacional'] || 0 }}</span>
+        </div>
+
+        <div class="flex flex-1 justify-between items-center border-b border-slate-800/40 last:border-0 transition-all hover:bg-white/5 px-2">
+          <span class="text-slate-200 text-sm font-black">🥁 MPB</span>
+          <span class="text-yellow-400 font-black text-xs">{{ genreCounts['MPB'] || 0 }}</span>
+        </div>
+
+      </div>
+    </div>
+
+    <button (click)="logout()" class="w-full bg-transparent border-2 border-slate-700 hover:border-red-500/50 hover:bg-red-500/10 text-slate-200 hover:text-red-400 py-4 rounded-full font-black text-sm transition-all flex items-center justify-center gap-3 active:scale-95 shadow-lg">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+      SAIR DO SISTEMA
+    </button>
+
+  </aside>
+
+  <div class="w-[4px] h-screen bg-gradient-to-b from-blue-500 via-orange-500 via-red-500 via-purple-500 to-pink-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] sticky top-0 z-50"></div>
+
+  <main class="flex-1 h-screen overflow-y-auto relative bg-[#0a0c10] flex flex-col">
+    
+    <header class="sticky top-0 z-40 bg-[#0a0c10]/80 backdrop-blur-md px-10 py-6 border-b-2 border-yellow-500/50 shadow-[0_4px_30px_-10px_rgba(250,204,21,0.5)] flex items-center">
+      
+      <div class="flex items-center gap-5">
+        <div class="h-2 w-14 bg-green-500 rounded-full animate-pulse shadow-[0_0_20px_rgba(34,197,94,1)]"></div>
+        
+        <div class="flex flex-col">
+          <span class="text-white font-mono text-2xl font-black tracking-[0.2em]">
+            {{ currentTime | date: 'HH:mm:ss' }}
+          </span>
+          <span class="text-slate-400 text-[10px] font-black uppercase tracking-[0.5em] mt-1 italic">Local Real-Time</span>
+        </div>
+      </div>
+
+    </header>
+
+    <section class="flex-1">
+      <router-outlet></router-outlet>
+    </section>
+
+  </main>
+</div>

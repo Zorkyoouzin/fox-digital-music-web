@@ -1,85 +1,73 @@
-<div class="container mx-auto">
-  <h2 class="text-2xl font-semibold leading-7 text-gray-900 text-center">Listagem de Músicas</h2>
-
-  <!-- Botão para adicionar nova música -->
-  <div class="flex justify-end my-4">
-    <button class="mx-2 bg-green-600 text-white font-medium p-2 rounded-md hover:bg-green-700" (click)="addNewMusic()">
-      Adicionar Nova Música
-    </button>
-  </div>
+<div class="flex flex-col items-center w-full min-h-screen bg-[#0a0c10] py-10 px-4">
   
-  <!-- Botão para alternar entre Cards e Tabela -->
-  <div class="flex justify-center my-4">
-    <button class="mx-2 bg-indigo-600 text-white font-medium p-2 rounded-md hover:bg-indigo-700" (click)="viewMode = 'cards'">Cards</button>
-    <button class="mx-2 bg-indigo-600 text-white font-medium p-2 rounded-md hover:bg-indigo-700" (click)="viewMode = 'table'">Tabela</button>
+  <div class="text-center mb-12 w-full max-w-4xl">
+    <h1 class="text-6xl font-black mb-10 tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 drop-shadow-[0_5px_15px_rgba(168,85,247,0.4)]">
+      Listagem de Músicas
+    </h1>
+
+    <div class="flex flex-wrap gap-4 justify-center items-center">
+      <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Buscar por cantor ou música..." 
+             class="w-full sm:w-80 bg-white text-slate-900 px-6 py-3 rounded-full font-bold outline-none shadow-lg focus:ring-4 focus:ring-purple-500/20 transition-all">
+      <button (click)="addNewMusic()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full transition-all hover:-translate-y-1 shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+        + Nova Música
+      </button>
+    </div>
   </div>
 
-  <!-- Exibição em Cards -->
-  <div *ngIf="viewMode === 'cards'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    <mat-card *ngFor="let music of musicList" class="example-card shadow-custom" appearance="outlined">
-      <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
-        <mat-card-title>{{ music.singer }}</mat-card-title>
-        <mat-card-subtitle>{{ music.song }}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p><strong>Gênero:</strong> {{ music.genre }}</p>
-        <p><strong>Data de Registro:</strong> {{ music.registrationDate | date: 'yyyy-MM-dd':'UTC' }}</p>
-      </mat-card-content>
-      <mat-card-actions class="justify-center">
-        <button mat-button class="bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600" (click)="viewDetails(music._id)">DETALHES</button>
-        <button mat-button class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600" (click)="confirmDelete(music._id)">EXCLUIR</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>  
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-7xl">
+    
+    <div *ngFor="let music of musicList" 
+         [ngClass]="getGenreGlow(music.genre)"
+         class="bg-[#1a1b26] p-8 rounded-[2rem] border border-slate-800/50 shadow-2xl flex flex-col relative transition-all duration-300">
+      
+      <div class="relative z-10 mb-6">
+        <h2 class="text-3xl font-black text-white leading-tight mb-2 truncate">{{ music.song }}</h2>
+        <p class="text-orange-500 font-black text-[10px] uppercase tracking-[0.3em]">{{ music.singer }}</p>
+      </div>
 
-  <!-- Exibição em Tabela -->
-  <div *ngIf="viewMode === 'table'" class="overflow-x-auto">
-    <table mat-table [dataSource]="musicList" class="min-w-full bg-white shadow-md rounded-lg">
-      <!-- Coluna Cantor -->
-      <ng-container matColumnDef="singer">
-        <th mat-header-cell *matHeaderCellDef> Cantor </th>
-        <td mat-cell *matCellDef="let music"> {{ music.singer }} </td>
-      </ng-container>
+      <div class="relative z-10 py-5 border-y border-slate-800/50 mb-6 space-y-4 font-bold uppercase tracking-widest text-[10px]">
+        <div class="flex justify-between items-center">
+          <span class="text-slate-500">Gênero</span>
+          <span class="bg-[#13141f] text-slate-200 px-3 py-1 rounded-lg border border-slate-700">{{ music.genre }}</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-slate-500">Registro</span>
+          <span class="text-slate-300 font-mono">{{ music.registrationDate | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
 
-      <!-- Coluna Música -->
-      <ng-container matColumnDef="song">
-        <th mat-header-cell *matHeaderCellDef> Música </th>
-        <td mat-cell *matCellDef="let music"> {{ music.song }} </td>
-      </ng-container>
+      <div class="relative mb-6 z-30">
+        <button (click)="togglePlaylistMenu($event, music._id!)" 
+                class="w-full text-[10px] font-black uppercase tracking-widest text-purple-400 bg-purple-500/10 py-3 rounded-2xl hover:bg-purple-500 hover:text-white transition-all border border-purple-500/20">
+          {{ activeMenuId === music._id ? '✖ Fechar' : '+ Salvar na Playlist' }}
+        </button>
+        
+        <div [class.hidden]="activeMenuId !== music._id"
+             class="absolute left-0 bottom-full mb-3 w-full bg-[#13141f] border border-slate-700 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <p class="p-4 text-[9px] uppercase text-slate-500 font-black border-b border-slate-800 tracking-widest">Minhas Playlists</p>
+          <div *ngIf="playlists.length > 0; else noPlay" class="max-h-40 overflow-y-auto">
+            <button 
+              *ngFor="let p of playlists"
+              (click)="addToPlaylist(p.id, music)"
+              class="w-full text-left p-4 text-[11px] font-bold text-slate-300 hover:bg-purple-600 hover:text-white transition-colors border-b border-slate-800/50 last:border-0">
+              {{ p.name }}
+            </button>
+          </div>
+          <ng-template #noPlay>
+            <p class="p-4 text-[10px] text-slate-600 italic">Vá em "Minha Playlist" para criar uma!</p>
+          </ng-template>
+        </div>
+      </div>
 
-      <!-- Coluna Gênero -->
-      <ng-container matColumnDef="genre">
-        <th mat-header-cell *matHeaderCellDef> Gênero </th>
-        <td mat-cell *matCellDef="let music"> {{ music.genre }} </td>
-      </ng-container>
+      <div class="relative z-10 flex gap-4 mt-auto">
+        <button (click)="viewDetails(music._id!)" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-full font-black text-xs uppercase tracking-widest transition-all hover:-translate-y-1">
+          Detalhes
+        </button>
+        <button (click)="confirmDelete(music._id!)" class="flex-1 bg-red-600 hover:bg-red-500 text-white py-4 rounded-full font-black text-xs uppercase tracking-widest transition-all hover:-translate-y-1">
+          Excluir
+        </button>
+      </div>
 
-      <!-- Coluna Data de Registro -->
-      <ng-container matColumnDef="registrationDate">
-        <th mat-header-cell *matHeaderCellDef> Data_Registro </th>
-        <td mat-cell *matCellDef="let music"> {{ music.registrationDate | date: 'yyyy-MM-dd':'UTC' }} </td>
-      </ng-container>
-
-      <!-- Coluna para Ações -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Ações </th>
-        <td mat-cell *matCellDef="let music">
-          <!-- Botão para ver detalhes -->
-          <button class="bg-indigo-500 text-white p-2 rounded-md hover:bg-indigo-600" (click)="viewDetails(music._id)">
-            Detalhes
-          </button>
-          <!-- Botão de exclusão -->
-          <button class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600"
-                  (click)="confirmDelete(music._id)">
-            Excluir
-          </button>
-        </td>
-      </ng-container>
-
-      <!-- Cabeçalhos da Tabela -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns.concat(['actions'])"></tr>
-      <!-- Linhas da Tabela -->
-      <tr mat-row *matRowDef="let row; columns: displayedColumns.concat(['actions'])"></tr>
-    </table>
+    </div>
   </div>
 </div>
