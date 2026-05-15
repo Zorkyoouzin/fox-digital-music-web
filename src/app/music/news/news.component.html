@@ -1,60 +1,84 @@
-<div class="flex flex-col items-center w-full min-h-screen bg-[#0a0c10] py-12 px-6">
+<div class="flex flex-col items-center w-full min-h-screen bg-[#0a0c10] py-12 px-6 overflow-y-auto">
   
-  <div class="w-full max-w-4xl mb-8">
-    <button routerLink="/list" class="text-slate-400 hover:text-white font-bold flex items-center gap-2 transition-all group">
-      <span class="group-hover:-translate-x-1 transition-transform">←</span> Voltar para a Lista
+  <div class="w-full max-w-4xl mb-10">
+    <button (click)="listMusics()" 
+            class="flex items-center gap-3 bg-[#1a1b26] border border-slate-700 text-white font-black px-8 py-4 rounded-full hover:bg-green-700 transition-all uppercase text-[10px] tracking-widest shadow-lg active:scale-95">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Músicas Cadastradas
     </button>
   </div>
 
-  <div class="text-center mb-12 w-full max-w-4xl">
+  <div class="text-center mb-16 w-full max-w-4xl">
     <h1 class="text-6xl font-black mb-4 tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 drop-shadow-[0_5px_15px_rgba(168,85,247,0.4)]">
       Cadastrar Música
     </h1>
-    <p class="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px]">Preencha os detalhes do novo hit no acervo</p>
+    <p class="text-slate-500 font-bold uppercase tracking-[0.5em] text-[9px]">Sincronização em tempo real com Fox Digital</p>
   </div>
 
-  <div class="w-full max-w-4xl bg-[#1a1b26] p-10 rounded-[2.5rem] border border-slate-800/60 shadow-2xl">
+  <div class="w-full max-w-4xl bg-[#1a1b26] p-12 rounded-[3.5rem] border border-slate-800/60 shadow-2xl relative overflow-hidden">
     
-    <form class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="absolute -top-24 -right-24 w-64 h-64 bg-blue-600/5 rounded-full blur-[80px]"></div>
+
+    <form [formGroup]="musicForm" (ngSubmit)="onSubmit()" class="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
       
-      <div class="flex flex-col gap-2">
-        <label class="text-slate-200 text-xs font-black uppercase tracking-widest ml-4">Nome do Cantor / Banda</label>
-        <input type="text" placeholder="Ex: MC Xenon" 
-               class="w-full bg-[#0a0c10] text-white px-6 py-4 rounded-full border border-slate-700 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none transition-all font-bold">
+      <div class="flex flex-col gap-4">
+        <label for="singer" class="text-slate-200 text-xs font-black uppercase tracking-[0.25em] ml-6 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span> Cantor / Artista
+        </label>
+        <input type="text" id="singer" formControlName="singer" placeholder="Ex: MC Xenon"
+               class="w-full bg-[#0a0c10] text-white px-8 py-5 rounded-full border-2 border-slate-800 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-bold placeholder:text-slate-800 shadow-inner">
+        <mat-error *ngIf="musicForm.get('singer')?.invalid && (musicForm.get('singer')?.touched || musicForm.get('singer')?.dirty)" class="text-red-500 text-[10px] font-bold uppercase tracking-widest px-6 italic">
+          {{ getErrorMessage('singer') }}
+        </mat-error>
       </div>
 
-      <div class="flex flex-col gap-2">
-        <label class="text-slate-200 text-xs font-black uppercase tracking-widest ml-4">Título da Música</label>
-        <input type="text" placeholder="Ex: Die With A Smile" 
-               class="w-full bg-[#0a0c10] text-white px-6 py-4 rounded-full border border-slate-700 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 outline-none transition-all font-bold">
+      <div class="flex flex-col gap-4">
+        <label for="song" class="text-slate-200 text-xs font-black uppercase tracking-[0.25em] ml-6 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span> Título da Faixa
+        </label>
+        <input type="text" id="song" formControlName="song" placeholder="Ex: Die With A Smile"
+               class="w-full bg-[#0a0c10] text-white px-8 py-5 rounded-full border-2 border-slate-800 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 outline-none transition-all font-bold placeholder:text-slate-800 shadow-inner">
+        <mat-error *ngIf="musicForm.get('song')?.invalid && (musicForm.get('song')?.touched || musicForm.get('song')?.dirty)" class="text-red-500 text-[10px] font-bold uppercase tracking-widest px-6 italic">
+          {{ getErrorMessage('song') }}
+        </mat-error>
       </div>
 
-      <div class="flex flex-col gap-2">
-        <label class="text-slate-200 text-xs font-black uppercase tracking-widest ml-4">Estilo / Gênero</label>
-        <select class="w-full bg-[#0a0c10] text-white px-6 py-4 rounded-full border border-slate-700 focus:border-green-500 outline-none transition-all font-bold appearance-none">
-          <option value="Pop">Pop</option>
-          <option value="Rock">Rock</option>
-          <option value="Sertanejo">Sertanejo</option>
-          <option value="Funk">Funk</option>
-          <option value="Pagode">Pagode</option>
-          <option value="Religioso">Religioso</option>
-          <option value="Internacional">Internacional</option>
-        </select>
+      <div class="flex flex-col gap-4">
+        <label for="genre" class="text-slate-200 text-xs font-black uppercase tracking-[0.25em] ml-6 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> Gênero Musical
+        </label>
+        <div class="relative group">
+          <select id="genre" formControlName="genre"
+                  class="w-full bg-[#0a0c10] text-white px-8 py-5 rounded-full border-2 border-slate-800 focus:border-green-500 outline-none transition-all font-bold appearance-none cursor-pointer shadow-inner">
+            <option value="Pop">🎵 Pop</option>
+            <option value="Rock">🎸 Rock</option>
+            <option value="Sertanejo">🤠 Sertanejo</option>
+            <option value="Religioso">🙏 Religioso</option>
+            <option value="Samba">💃 Samba</option>
+            <option value="Funk">🔥 Funk</option>
+            <option value="Internacional">🌍 Internacional</option>
+            <option value="MPB">🥁 MPB</option>
+          </select>
+          <div class="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none text-slate-600 transition-colors">▼</div>
+        </div>
       </div>
 
-      <div class="flex flex-col gap-2">
-        <label class="text-slate-200 text-xs font-black uppercase tracking-widest ml-4">Data de Cadastro</label>
-        <input type="date" 
-               class="w-full bg-[#0a0c10] text-white px-6 py-4 rounded-full border border-slate-700 focus:border-pink-500 outline-none transition-all font-bold color-scheme-dark">
+      <div class="flex flex-col gap-4">
+        <label for="registrationDate" class="text-slate-200 text-xs font-black uppercase tracking-[0.25em] ml-6 flex items-center gap-2">
+          <span class="w-1.5 h-1.5 bg-pink-500 rounded-full"></span> Data de Cadastro
+        </label>
+        <input type="date" id="registrationDate" formControlName="registrationDate"
+               class="w-full bg-[#0a0c10] text-white px-8 py-5 rounded-full border-2 border-slate-800 focus:border-pink-500 outline-none transition-all font-bold [color-scheme:dark] shadow-inner">
       </div>
 
-      <div class="md:col-span-2 mt-6">
-        <button class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-black py-5 rounded-full text-sm uppercase tracking-[0.3em] transition-all shadow-xl hover:-translate-y-1 active:scale-95">
-          🚀 Finalizar Cadastro
+      <div class="md:col-span-2 mt-8 flex justify-center">
+        <button type="submit" [disabled]="!musicForm.valid"
+                class="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-black py-6 rounded-full text-sm uppercase tracking-[0.5em] transition-all shadow-[0_15px_40px_-12px_rgba(168,85,247,0.6)] disabled:opacity-20 hover:scale-[1.01] active:scale-95">
+          🚀 FINALIZAR E ENVIAR
         </button>
       </div>
-
     </form>
   </div>
-
 </div>
